@@ -1,14 +1,15 @@
 blueprint:
   name: Control de Modo de Aulas por Horario
-  description: Cambia el estado de múltiples selectores (input_select) a 'apagado' y 'auto' según dos horarios configurables de lunes a viernes.
+  description: Cambia el estado de múltiples selectores (input_select) a 'apagado' y 'auto' según dos horarios configurables.
   domain: automation
   input:
     target_entities:
       name: Aulas / Selectores a controlar
       description: Selecciona las entidades (input_select) que cambiarán de modo.
-      target:
-        entity:
-          domain: input_select
+      selector:
+        target:
+          entity:
+            - domain: input_select
 
     time_turn_off:
       name: Hora de Apagado
