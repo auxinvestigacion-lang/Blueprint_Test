@@ -1,11 +1,11 @@
 blueprint:
   name: bp_modo_aula v1.0
-  description: Cambia el estado a 'apagado' y 'auto' según dos horarios, filtrando solo los selectores que contengan la palabra 'modo'.
+  description: Cambia el estado de los selectores (input_select) a 'apagado' y 'auto' según dos horarios configurables.
   domain: automation
   input:
     target_entities:
       name: Aulas / Selectores a controlar
-      description: Selecciona las entidades (input_select) o áreas. Se filtrarán automáticamente solo las que incluyan 'modo' en su nombre.
+      description: Selecciona las entidades (input_select) o áreas que cambiarán de modo.
       selector:
         target:
           entity:
@@ -49,27 +49,6 @@ triggers:
       - fri
 
 actions:
-  - variables:
-      # Convierte el input de destinos en una lista de entity_ids filtrados que contengan la palabra 'modo'
-      raw_targets: !input target_entities
-      filtered_entities: >
-        {% set targets = raw_targets.get('entity_id', []) %}
-        {% if targets is string %}
-          {% set targets = [targets] %}
-        {% endif %}
-        {% set ns = namespace(entities=[]) %}
-        {% for entity in targets %}
-          {% set name = state_attr(entity, 'friendly_name') | default('', true) %}
-          {% if 'modo' in entity.lower() or 'modo' in name.lower() %}
-            {% set ns.entities = ns.entities + [entity] %}
-          {% endif %}
-        {% endfor %}
-        {{ ns.entities }}
-
-  # Solo ejecuta las acciones si se encontró al menos una entidad con la palabra 'modo'
-  - condition: template
-    value_template: "{{ filtered_entities | length > 0 }}"
-
   - choose:
       - conditions:
           - condition: trigger
@@ -79,8 +58,7 @@ actions:
           - action: input_select.select_option
             data:
               option: "apagado"
-            target:
-              entity_id: "{{ filtered_entities }}"
+            target: !input target_entities
 
       - conditions:
           - condition: trigger
@@ -90,5 +68,4 @@ actions:
           - action: input_select.select_option
             data:
               option: "auto"
-            target:
-              entity_id: "{{ filtered_entities }}"
+            target: !input target_entities
