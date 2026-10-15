@@ -1,6 +1,6 @@
 blueprint:
   name: Control de Modo de Aulas por Horario
-  description: Cambia el estado de múltiples selectores (input_select) a 'apagado' y 'auto' según dos horarios configurables.
+  description: Cambia el estado de los selectores (input_select) a 'apagado' y 'auto' según dos horarios configurables.
   domain: automation
   input:
     target_entities:
@@ -24,20 +24,6 @@ blueprint:
       default: "15:00:00"
       selector:
         time: {}
-
-    option_off_name:
-      name: Nombre de la opción "Apagado"
-      description: Texto exacto de la opción 'apagado' en tus input_select.
-      default: "apagado"
-      selector:
-        text: {}
-
-    option_auto_name:
-      name: Nombre de la opción "Auto"
-      description: Texto exacto de la opción 'auto' en tus input_select.
-      default: "auto"
-      selector:
-        text: {}
 
 mode: single
 
@@ -71,7 +57,7 @@ actions:
         sequence:
           - action: input_select.select_option
             data:
-              option: !input option_off_name
+              option: "apagado"
             target: !input target_entities
 
       - conditions:
@@ -81,5 +67,5 @@ actions:
         sequence:
           - action: input_select.select_option
             data:
-              option: !input option_auto_name
+              option: "auto"
             target: !input target_entities
