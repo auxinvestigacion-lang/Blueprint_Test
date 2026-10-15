@@ -1,0 +1,84 @@
+blueprint:
+  name: Control de Modo de Aulas por Horario
+  description: Cambia el estado de múltiples selectores (input_select) a 'apagado' y 'auto' según dos horarios configurables de lunes a viernes.
+  domain: automation
+  input:
+    target_entities:
+      name: Aulas / Selectores a controlar
+      description: Selecciona las entidades (input_select) que cambiarán de modo.
+      target:
+        entity:
+          domain: input_select
+
+    time_turn_off:
+      name: Hora de Apagado
+      description: Hora a la que el modo cambiará a 'apagado'.
+      default: "06:00:00"
+      selector:
+        time: {}
+
+    time_turn_auto:
+      name: Hora de Modo Auto
+      description: Hora a la que el modo cambiará a 'auto'.
+      default: "15:00:00"
+      selector:
+        time: {}
+
+    option_off_name:
+      name: Nombre de la opción "Apagado"
+      description: Texto exacto de la opción 'apagado' en tus input_select.
+      default: "apagado"
+      selector:
+        text: {}
+
+    option_auto_name:
+      name: Nombre de la opción "Auto"
+      description: Texto exacto de la opción 'auto' en tus input_select.
+      default: "auto"
+      selector:
+        text: {}
+
+mode: single
+
+triggers:
+  - trigger: time
+    at: !input time_turn_off
+    id: trigger_apagado
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+
+  - trigger: time
+    at: !input time_turn_auto
+    id: trigger_auto
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - trigger_apagado
+        sequence:
+          - action: input_select.select_option
+            data:
+              option: !input option_off_name
+            target: !input target_entities
+
+      - conditions:
+          - condition: trigger
+            id:
+              - trigger_auto
+        sequence:
+          - action: input_select.select_option
+            data:
+              option: !input option_auto_name
+            target: !input target_entities
