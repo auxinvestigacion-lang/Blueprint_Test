@@ -1,5 +1,5 @@
 blueprint:
-  name: Control de Modo de Aulas por Horario
+  name: bp_modo_aula v1.0
   description: Cambia el estado de los selectores (input_select) a 'apagado' y 'auto' según dos horarios configurables.
   domain: automation
   input:
