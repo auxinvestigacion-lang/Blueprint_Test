@@ -5,11 +5,11 @@ blueprint:
   input:
     target_entities:
       name: Aulas / Selectores a controlar
-      description: Selecciona las entidades (input_select) que cambiarán de modo.
+      description: Selecciona las entidades (input_select) o áreas que cambiarán de modo.
       selector:
         target:
           entity:
-            - domain: input_select
+            domain: input_select
 
     time_turn_off:
       name: Hora de Apagado
